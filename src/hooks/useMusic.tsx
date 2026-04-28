@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useRef, useEffect, ReactNode } from "react";
-import { useState as useClientState } from "react";
 import { TRACKS, type Track } from "@/components/site/data";
 
 interface MusicContextType {
@@ -16,7 +15,7 @@ interface MusicContextType {
 
 const MusicContext = createContext<MusicContextType | undefined>(undefined);
 
-function MusicProviderInner({ children }: { children: ReactNode }) {
+export function MusicProvider({ children }: { children: ReactNode }) {
   const [currentTrack, setCurrentTrack] = useState<Track | undefined>();
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -192,21 +191,6 @@ function MusicProviderInner({ children }: { children: ReactNode }) {
       <audio ref={audioRef} />
     </MusicContext.Provider>
   );
-}
-
-export function MusicProvider({ children }: { children: ReactNode }) {
-  const [isClient, setIsClient] = useState(false);
-  
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-  
-  if (!isClient) {
-    // Return a placeholder during SSR
-    return <>{children}</>;
-  }
-  
-  return <MusicProviderInner>{children}</MusicProviderInner>;
 }
 
 export function useMusic() {
