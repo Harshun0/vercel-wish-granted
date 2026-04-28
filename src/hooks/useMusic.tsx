@@ -128,6 +128,10 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
   const togglePlayPause = () => {
     if (!audioRef.current || !activeTrack?.audioUrl) return;
+    if (!audioRef.current.src) {
+      audioRef.current.src = activeTrack.audioUrl;
+      audioRef.current.load();
+    }
     if (playing) {
       audioRef.current.pause();
       setPlaying(false);
@@ -137,14 +141,15 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   };
 
   const handleTrackSelect = (track: Track) => {
-    if (!track.audioUrl || !audioRef.current) return;
-    const audio = audioRef.current;
-    audio.src = track.audioUrl;
-    audio.load();
+    if (!track.audioUrl) return;
     setCurrentTrack(track);
     setCurrentTime(0);
     setDuration(0);
     setPlaying(false);
+    if (!audioRef.current) return;
+    const audio = audioRef.current;
+    audio.src = track.audioUrl;
+    audio.load();
     
     // Wait for audio to be ready before playing
     const onCanPlay = () => {
