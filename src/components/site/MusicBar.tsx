@@ -46,7 +46,7 @@ export function MusicBar() {
       {/* Sound bar keyframes — outside component so not re-injected every render */}
       <style>{SOUND_BAR_STYLE}</style>
 
-      <div className="fixed inset-x-0 bottom-0 z-[50] border-t border-border bg-background/90 backdrop-blur-xl">
+      <div className="fixed inset-x-0 bottom-0 z-[80] border-t border-border bg-background/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1600px] items-center gap-4 px-4 py-2 md:gap-6 md:px-10 md:py-3">
 
           {/* Track info */}

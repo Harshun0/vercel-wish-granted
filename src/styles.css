@@ -113,6 +113,7 @@
   ::-webkit-scrollbar-thumb { background: var(--primary); }
 
   /* Custom cursor */
+  .hide-cursor, .hide-cursor *,
   body.hide-cursor, body.hide-cursor * { cursor: none !important; }
   .cursor {
     position: fixed;

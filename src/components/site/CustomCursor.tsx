@@ -10,9 +10,11 @@ export function CustomCursor() {
       const isDesktop = window.matchMedia("(pointer: fine) and (min-width: 768px)").matches;
       if (isDesktop) {
         setEnabled(true);
+        document.body.classList.add("hide-cursor");
         document.documentElement.classList.add("hide-cursor");
       } else {
         setEnabled(false);
+        document.body.classList.remove("hide-cursor");
         document.documentElement.classList.remove("hide-cursor");
       }
     };
@@ -35,6 +37,7 @@ export function CustomCursor() {
       mediaQuery.removeEventListener("change", handleMediaChange);
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mouseover", over);
+      document.body.classList.remove("hide-cursor");
       document.documentElement.classList.remove("hide-cursor");
     };
   }, []);
