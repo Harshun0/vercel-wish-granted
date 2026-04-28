@@ -302,6 +302,4 @@
   .text-glow-primary {
     text-shadow: 0 0 20px color-mix(in oklab, var(--primary) 60%, transparent);
   }
-
-  .hide-cursor, .hide-cursor * { cursor: none !important; }
 }

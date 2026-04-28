@@ -60,7 +60,7 @@ export function CustomCursor() {
     <>
       {/* Crosshair lines */}
       <div
-        className="pointer-events-none fixed z-[70] transition-transform duration-150 ease-out"
+        className="pointer-events-none fixed z-[2147483647] transition-transform duration-150 ease-out"
         style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}
       >
         <div className="relative" style={{ transform: "translate(-50%, -50%)" }}>

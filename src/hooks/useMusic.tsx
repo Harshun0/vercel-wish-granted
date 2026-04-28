@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useRef, useEffect, ReactNode } from "react";
-import { useState as useClientState } from "react";
 import { TRACKS, type Track } from "@/components/site/data";
 
 interface MusicContextType {
@@ -16,7 +15,7 @@ interface MusicContextType {
 
 const MusicContext = createContext<MusicContextType | undefined>(undefined);
 
-function MusicProviderInner({ children }: { children: ReactNode }) {
+export function MusicProvider({ children }: { children: ReactNode }) {
   const [currentTrack, setCurrentTrack] = useState<Track | undefined>();
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -129,6 +128,10 @@ function MusicProviderInner({ children }: { children: ReactNode }) {
 
   const togglePlayPause = () => {
     if (!audioRef.current || !activeTrack?.audioUrl) return;
+    if (!audioRef.current.src) {
+      audioRef.current.src = activeTrack.audioUrl;
+      audioRef.current.load();
+    }
     if (playing) {
       audioRef.current.pause();
       setPlaying(false);
@@ -138,14 +141,15 @@ function MusicProviderInner({ children }: { children: ReactNode }) {
   };
 
   const handleTrackSelect = (track: Track) => {
-    if (!track.audioUrl || !audioRef.current) return;
-    const audio = audioRef.current;
-    audio.src = track.audioUrl;
-    audio.load();
+    if (!track.audioUrl) return;
     setCurrentTrack(track);
     setCurrentTime(0);
     setDuration(0);
     setPlaying(false);
+    if (!audioRef.current) return;
+    const audio = audioRef.current;
+    audio.src = track.audioUrl;
+    audio.load();
     
     // Wait for audio to be ready before playing
     const onCanPlay = () => {
@@ -192,21 +196,6 @@ function MusicProviderInner({ children }: { children: ReactNode }) {
       <audio ref={audioRef} />
     </MusicContext.Provider>
   );
-}
-
-export function MusicProvider({ children }: { children: ReactNode }) {
-  const [isClient, setIsClient] = useState(false);
-  
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-  
-  if (!isClient) {
-    // Return a placeholder during SSR
-    return <>{children}</>;
-  }
-  
-  return <MusicProviderInner>{children}</MusicProviderInner>;
 }
 
 export function useMusic() {
