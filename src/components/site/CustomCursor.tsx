@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function CustomCursor() {
   const [pos, setPos] = useState({ x: -100, y: -100 });
   const [hover, setHover] = useState(false);
   const [enabled, setEnabled] = useState(false);
+  const styleRef = useRef<HTMLStyleElement | null>(null);
 
   useEffect(() => {
     const checkDevice = () => {
@@ -12,10 +13,19 @@ export function CustomCursor() {
         setEnabled(true);
         document.body.classList.add("hide-cursor");
         document.documentElement.classList.add("hide-cursor");
+        if (!styleRef.current) {
+          const style = document.createElement("style");
+          style.dataset.customCursor = "true";
+          style.textContent = "html, body, body *, body *::before, body *::after { cursor: none !important; }";
+          document.head.appendChild(style);
+          styleRef.current = style;
+        }
       } else {
         setEnabled(false);
         document.body.classList.remove("hide-cursor");
         document.documentElement.classList.remove("hide-cursor");
+        styleRef.current?.remove();
+        styleRef.current = null;
       }
     };
 
@@ -39,6 +49,8 @@ export function CustomCursor() {
       window.removeEventListener("mouseover", over);
       document.body.classList.remove("hide-cursor");
       document.documentElement.classList.remove("hide-cursor");
+      styleRef.current?.remove();
+      styleRef.current = null;
     };
   }, []);
 
